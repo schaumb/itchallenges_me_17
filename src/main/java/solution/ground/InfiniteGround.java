@@ -9,8 +9,7 @@ import java.util.HashMap;
  * Created by qqcs on 06/04/17.
  */
 public class InfiniteGround extends Ground {
-
-    private static class Key {
+    private  class Key {
         private final int time;
         private final int x;
         private final int y;
@@ -43,22 +42,14 @@ public class InfiniteGround extends Ground {
     }
 
     public InfiniteGround(long seed) {
-        super(new TwoDimRng(seed));
+        super(seed);
     }
 
     private final HashMap<Key, Cell> calculated_cells = new HashMap<>();
 
     @Override
     protected Cell getCell(int time, int x, int y) {
-        Key key = new Key(time, x, y);
-
-        Cell cell = calculated_cells.get(key);
-
-        if(cell == null) {
-            calculated_cells.put(key, cell = createCell(time, x, y));
-        }
-
-        return cell;
+        return calculated_cells.computeIfAbsent(new Key(time, x, y), k -> createCell(time, x, y));
     }
 
     private Cell createCell(int time, int x, int y) {

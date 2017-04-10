@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 public abstract class Ground {
     private final TwoDimRng random;
 
-    protected Ground(TwoDimRng random) {
-        this.random = random;
+    protected Ground(long seed) {
+        this.random = new TwoDimRng(seed);
     }
 
     protected TwoDimRng getRandom() {

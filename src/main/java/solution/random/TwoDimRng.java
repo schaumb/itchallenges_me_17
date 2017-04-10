@@ -6,6 +6,7 @@ import java.util.function.UnaryOperator;
  * Created by qqcs on 06/04/17.
  */
 public class TwoDimRng {
+    private final long seed;
     private final long hashed_seed;
     private final UnaryOperator<Long> hash;
     public static final UnaryOperator<Long> DEFAULT_HASH = n -> {
@@ -21,11 +22,16 @@ public class TwoDimRng {
     }
 
     public TwoDimRng(long seed, UnaryOperator<Long> hash) {
+        this.seed = seed;
         this.hash = hash;
         this.hashed_seed = hash.apply(seed);
     }
 
     public long get(long x, long y) {
         return hashed_seed ^ hash.apply(x ^ hash.apply(y));
+    }
+
+    public long getSeed() {
+        return seed;
     }
 }

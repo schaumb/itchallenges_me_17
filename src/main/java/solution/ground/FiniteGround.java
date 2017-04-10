@@ -17,17 +17,17 @@ public class FiniteGround extends Ground {
     private final boolean cyclic;
     private final int sizeX;
     private final int sizeY;
+    private final ArrayList<List<List<Cell>>> timedFields = new ArrayList<>();
 
     private final static Cell OUTSIDE = Cell.getCell(false, Color.BLUE);
 
     public FiniteGround(long seed, boolean cyclic, int sizeX, int sizeY) {
-        super(new TwoDimRng(seed));
+        super(seed);
         this.cyclic = cyclic;
         this.sizeX = sizeX;
         this.sizeY = sizeY;
     }
 
-    ArrayList<List<List<Cell>>> timedFields = new ArrayList<>();
 
     private void generateToTime(int time) {
         if(timedFields.isEmpty()) {
