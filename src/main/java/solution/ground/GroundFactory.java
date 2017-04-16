@@ -1,12 +1,12 @@
 package solution.ground;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by ecosim on 4/10/17.
  */
 public class GroundFactory {
-    private final HashMap<Key, GroundCounter> grounds = new HashMap<>();
+    private final ConcurrentHashMap<Key, GroundCounter> grounds = new ConcurrentHashMap<>();
 
     private GroundFactory() {
     }

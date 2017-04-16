@@ -2,17 +2,17 @@ package solution.utils;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by qqcs on 06/04/17.
  */
 public class Cell {
-    private final static HashMap<Object, Cell> STATIC_INSTANCES;
+    private final static ConcurrentHashMap<Object, Cell> STATIC_INSTANCES;
 
     static {
-        STATIC_INSTANCES = new HashMap<>();
+        STATIC_INSTANCES = new ConcurrentHashMap<>();
 
         for (short b = 0; b <= 1; ++b) {
             boolean live = b == 1;
