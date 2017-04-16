@@ -6,6 +6,32 @@ import java.util.HashMap;
  * Created by ecosim on 4/10/17.
  */
 public class GroundFactory {
+    private final HashMap<Key, GroundCounter> grounds = new HashMap<>();
+
+    private GroundFactory() {
+    }
+
+    public static GroundFactory getInstance() {
+        return SingletonHelper.INSTANCE;
+    }
+
+    public Ground getGround(boolean finite, boolean cyclic, int sizeX, int sizeY, long seed) {
+        return grounds.computeIfAbsent(new Key(finite, cyclic, sizeX, sizeY, seed),
+                k -> new GroundCounter(finite ? new FiniteGround(seed, cyclic, sizeX, sizeY) :
+                        new InfiniteGround(seed)))
+                .addUser().getGround();
+    }
+
+    public void removeGround(Ground g) {
+        grounds.entrySet().removeIf(e ->
+                e.getValue().getGround() == g && e.getValue().release().removable()
+        );
+    }
+
+    private static class SingletonHelper {
+        private static final GroundFactory INSTANCE = new GroundFactory();
+    }
+
     private class Key {
         private final boolean finite;
         private final boolean cyclic;
@@ -63,43 +89,18 @@ public class GroundFactory {
             return ground;
         }
 
-        public GroundCounter addUser() {
+        public synchronized GroundCounter addUser() {
             ++usersCount;
             return this;
         }
 
-        public GroundCounter release() {
+        public synchronized GroundCounter release() {
             --usersCount;
             return this;
         }
 
-        public boolean removable() {
+        public synchronized boolean removable() {
             return usersCount <= 0;
         }
-    }
-
-    private final HashMap<Key, GroundCounter> grounds = new HashMap<>();
-
-    private GroundFactory(){}
-
-    private static class SingletonHelper{
-        private static final GroundFactory INSTANCE = new GroundFactory();
-    }
-
-    public static GroundFactory getInstance(){
-        return SingletonHelper.INSTANCE;
-    }
-
-    public Ground getGround(boolean finite, boolean cyclic, int sizeX, int sizeY, long seed) {
-        return grounds.computeIfAbsent(new Key(finite, cyclic, sizeX, sizeY, seed),
-                k -> new GroundCounter(finite ? new FiniteGround(seed, cyclic, sizeX, sizeY) :
-                    new InfiniteGround(seed)))
-                .addUser().getGround();
-    }
-
-    public void removeGround(Ground g) {
-        grounds.entrySet().removeIf(e ->
-            e.getValue().getGround() == g && e.getValue().release().removable()
-        );
     }
 }

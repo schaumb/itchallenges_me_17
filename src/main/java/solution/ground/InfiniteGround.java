@@ -1,6 +1,5 @@
 package solution.ground;
 
-import solution.random.TwoDimRng;
 import solution.utils.Cell;
 
 import java.util.HashMap;
@@ -9,7 +8,31 @@ import java.util.HashMap;
  * Created by qqcs on 06/04/17.
  */
 public class InfiniteGround extends Ground {
-    private  class Key {
+    private final HashMap<Key, Cell> calculated_cells = new HashMap<>();
+
+    public InfiniteGround(long seed) {
+        super(seed);
+    }
+
+    @Override
+    protected Cell getCell(int time, int x, int y) {
+        return calculated_cells.computeIfAbsent(new Key(time, x, y), k -> createCell(time, x, y));
+    }
+
+    @Override
+    public End tryToFindEnd() {
+        return new End(0, 0);
+    }
+
+    private Cell createCell(int time, int x, int y) {
+        if (time == 0) {
+            return Cell.getNthCell(Math.abs(getRandom().get(x, y)));
+        } else {
+            return createCellByHistory(time, x, y);
+        }
+    }
+
+    private class Key {
         private final int time;
         private final int x;
         private final int y;
@@ -38,25 +61,6 @@ public class InfiniteGround extends Ground {
             result = 31 * result + x;
             result = 31 * result + y;
             return result;
-        }
-    }
-
-    public InfiniteGround(long seed) {
-        super(seed);
-    }
-
-    private final HashMap<Key, Cell> calculated_cells = new HashMap<>();
-
-    @Override
-    protected Cell getCell(int time, int x, int y) {
-        return calculated_cells.computeIfAbsent(new Key(time, x, y), k -> createCell(time, x, y));
-    }
-
-    private Cell createCell(int time, int x, int y) {
-        if(time == 0) {
-            return Cell.getNthCell(Math.abs(getRandom().get(x, y)));
-        } else {
-            return createCellByHistory(time, x, y);
         }
     }
 }

@@ -4,11 +4,7 @@ import solution.random.TwoDimRng;
 import solution.utils.Cell;
 import solution.utils.Color;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -27,7 +23,7 @@ public abstract class Ground {
 
     public List<List<Cell>> getCells(int time, int fromX, int toX, int fromY, int toY) {
         List<List<Cell>> lines = new ArrayList<>(toY - fromY);
-        for(int y = fromY; y < toY; ++y) {
+        for (int y = fromY; y < toY; ++y) {
             lines.add(getCells(time, fromX, toX, y));
         }
         return lines;
@@ -35,13 +31,15 @@ public abstract class Ground {
 
     protected List<Cell> getCells(int time, int fromX, int toX, int y) {
         List<Cell> line = new ArrayList<>(toX - fromX);
-        for(int x = fromX; x < toX; ++x) {
+        for (int x = fromX; x < toX; ++x) {
             line.add(getCell(time, x, y));
         }
         return line;
     }
 
     protected abstract Cell getCell(int time, int x, int y);
+
+    public abstract End tryToFindEnd();
 
     // the rule
     protected Cell createCellByHistory(int time, int x, int y) {
@@ -55,7 +53,7 @@ public abstract class Ground {
                 .collect(Collectors.toList());
 
         int liveCellsCount = liveCells.size();
-        if(previous.isLive()) {
+        if (previous.isLive()) {
             switch (liveCellsCount) {
                 // live
                 case 3: // +1 because of previous calculated
@@ -65,7 +63,7 @@ public abstract class Ground {
                 default:
                     return Cell.getCell(false, previous.getColor());
             }
-        } else if(liveCellsCount == 3) {
+        } else if (liveCellsCount == 3) {
             // born
             Color newColor = liveCells.stream()
                     .collect(Collectors.groupingBy(Cell::getColor, Collectors.counting()))
@@ -75,6 +73,24 @@ public abstract class Ground {
             return Cell.getCell(true, newColor);
         } else {
             return previous;
+        }
+    }
+
+    public static class End {
+        private final int from;
+        private final int to;
+
+        public End(int from, int to) {
+            this.from = from;
+            this.to = to;
+        }
+
+        public int getFrom() {
+            return from;
+        }
+
+        public int getTo() {
+            return to;
         }
     }
 }

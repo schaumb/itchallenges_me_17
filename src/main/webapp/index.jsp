@@ -77,9 +77,9 @@
                             </div>
                             <div class="input-group">
                                 <div class="input-group-addon">Window width</div>
-                                <input type="number" class="form-control" name="show-width" min="1" max="100" value="10">
+                                <input type="number" class="form-control" name="show-width" min="1" value="10">
                                 <div class="input-group-addon">Window height</div>
-                                <input type="number" class="form-control" name="show-height" min="1" max="100" value="10">
+                                <input type="number" class="form-control" name="show-height" min="1" value="10">
                             </div>
                         </div>
                         <div class="input-group">

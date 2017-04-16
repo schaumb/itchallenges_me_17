@@ -9,14 +9,6 @@ import java.util.Objects;
  * Created by qqcs on 06/04/17.
  */
 public class Cell {
-    private final boolean live;
-    private final Color color;
-
-    private Cell(boolean live, Color color) {
-        this.live = live;
-        this.color = color;
-    }
-
     private final static HashMap<Object, Cell> STATIC_INSTANCES;
 
     static {
@@ -30,6 +22,14 @@ public class Cell {
                 STATIC_INSTANCES.put(key, new Cell(live, color));
             }
         }
+    }
+
+    private final boolean live;
+    private final Color color;
+
+    private Cell(boolean live, Color color) {
+        this.live = live;
+        this.color = color;
     }
 
     public static Cell getCell(boolean live, Color color) {
@@ -61,19 +61,20 @@ public class Cell {
         Cell cell = (Cell) o;
 
         if (live != cell.live) return false;
-        return color == cell.color;
+        return !live || color == cell.color;
     }
 
     @Override
     public int hashCode() {
         int result = (live ? 1 : 0);
-        result = 31 * result + color.hashCode();
+        if (live) {
+            result = 31 * result + color.hashCode();
+        }
         return result;
     }
 
     @Override
     public String toString() {
-        String c = getColor().name().charAt(0) + "";
-        return isLive() ? c : " ";
+        return isLive() ? getColor().name().charAt(0) + "" : " ";
     }
 }

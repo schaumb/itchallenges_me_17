@@ -13,11 +13,13 @@ import javax.servlet.http.HttpSessionListener;
 @WebListener
 public class SessionListener implements HttpSessionListener {
     @Override
-    public void sessionCreated(HttpSessionEvent httpSessionEvent) {}
+    public void sessionCreated(HttpSessionEvent httpSessionEvent) {
+    }
 
     @Override
     public void sessionDestroyed(HttpSessionEvent httpSessionEvent) {
         GroundFactory.getInstance()
                 .removeGround((Ground) httpSessionEvent.getSession().getAttribute("ground"));
+        httpSessionEvent.getSession().removeAttribute("ground");
     }
 }
