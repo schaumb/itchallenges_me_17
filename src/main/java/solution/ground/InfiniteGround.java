@@ -2,13 +2,15 @@ package solution.ground;
 
 import solution.utils.Cell;
 
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by qqcs on 06/04/17.
  */
 public class InfiniteGround extends Ground {
-    private final ConcurrentHashMap<Key, Cell> calculated_cells = new ConcurrentHashMap<>();
+    private final Map<Key, Cell> calculated_cells = Collections.synchronizedMap(new HashMap<>());
 
     public InfiniteGround(long seed) {
         super(seed);
